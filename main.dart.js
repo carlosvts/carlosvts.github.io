@@ -87564,7 +87564,7 @@ N(a){var s=null
 return A.ei(A.d([A.aFl("assets/icons/logo.svg",32,32),A.dB(s,8,8),A.dD("carlosvts",s,s,A.au(a).ok.a,s)],t.p),B.aa,B.T,B.aC)}}
 A.MV.prototype={
 N(a){var s=null
-return A.ei(A.d([A.dD("Low-Level systems engineer",s,s,s,s),A.dB(s,8,8),A.dD("C / C++ / Linux / Memory",s,s,A.au(a).ok.Q,s),A.dD("Learning: Flutter (Dart) / Rust",s,s,A.au(a).ok.Q,s)],t.p),B.aa,B.T,B.aC)}}
+return A.ei(A.d([A.dD("Low-Level systems engineer",s,s,s,s),A.dB(s,8,8),A.dD("C / C++ / Linux / Memory / Python",s,s,A.au(a).ok.Q,s),A.dD("Learning: Flutter (Dart) / Rust",s,s,A.au(a).ok.Q,s)],t.p),B.aa,B.T,B.aC)}}
 A.MT.prototype={
 N(a){var s=null
 return A.hL(new A.fP(B.ZQ,A.dD("Constantly learning how systems work beneath abstractions and how careful design leads to predictable software",s,s,A.au(a).ok.z,B.bU),s),s,s)}}
