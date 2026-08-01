@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Why I Take Notes? — carlosvts</title>
+	<link rel="stylesheet" href="/static/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+	<script>
+		
+		(function () {
+			var stored = localStorage.getItem("theme");
+			if (stored) document.documentElement.setAttribute("data-theme", stored);
+		})();
+	</script>
+</head>
+<body>
+	<header class="site-header">
+		<nav class="nav">
+			<a class="wordmark" href="/">carlosvts</a>
+			<div class="nav-links">
+				<a href="/about/" class="">About</a>
+				<a href="/projects/" class="">Projects</a>
+				<a href="/notes/" class="active">Notes</a>
+			</div>
+			<div class="nav-right">
+				<a href="https://github.com/carlosvts" class="external">GitHub</a>
+				<a href="https://www.linkedin.com/in/carlos-vin%C3%ADcius-teixeira-de-souza-916a82378/" class="external">LinkedIn</a>
+				<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">
+					<svg class="icon-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+					<svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+				</button>
+			</div>
+		</nav>
+	</header>
+
+	<main class="site-main">
+		
+<article class="page page-note">
+	<a class="back-link" href="/notes/">&larr; Notes</a>
+	<p class="kicker">2026-01-15</p>
+	<h1>Why I Take Notes?</h1>
+	<div class="prose">
+		<p>I built this section on my website to be able to store most of my notes during my programming journey, but why?</p>
+<h2>Slowing the pace</h2>
+<p>Usually when I am learning new features and concepts, sometimes I just go to the practical part after reading/listening to some book/video. Although i found a great method -- because all the content is fresh on mind -- if I want to go back to that analysis a few days or weeks, i just don't have a place with notes written in my style.</p>
+<h2>Better learning</h2>
+<p>In most cases, i have discovered that if i spend some time writing a markdown (like this one) after completing a project or a difficulty task I was assigned, my understanding about the concepts scales by a lot. You have to stop the all vicious speedy life to sit there and write a cohere note on how XX thing work, organize the words and paragraphs in a way that other person with zero experience can -- at least -- learn something new. That's for me isn't just a way to enhance my learning, but a way to express better a thought.</p>
+<p>As Graciliano Ramos -- famous brazilian poet --  once said .</p>
+<blockquote>
+<p>Literature is literature. We complain, fight, treat of business naturally, but arrange the words with ink is other thing. If i write in the way i talk, nobody will read me</p>
+</blockquote>
+
+	</div>
+</article>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+	onload="renderMathInElement(document.querySelector('.prose'), {
+		delimiters: [
+			{left: '$$', right: '$$', display: true},
+			{left: '$', right: '$', display: false}
+		]
+	});"></script>
+
+	</main>
+
+	<footer class="site-footer">
+		<span>&copy; 2026 carlosvts</span>
+	</footer>
+
+	<script src="/static/js/theme.js"></script>
+</body>
+</html>

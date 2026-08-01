@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Projects — carlosvts</title>
+	<link rel="stylesheet" href="/static/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+	<script>
+		
+		(function () {
+			var stored = localStorage.getItem("theme");
+			if (stored) document.documentElement.setAttribute("data-theme", stored);
+		})();
+	</script>
+</head>
+<body>
+	<header class="site-header">
+		<nav class="nav">
+			<a class="wordmark" href="/">carlosvts</a>
+			<div class="nav-links">
+				<a href="/about/" class="">About</a>
+				<a href="/projects/" class="active">Projects</a>
+				<a href="/notes/" class="">Notes</a>
+			</div>
+			<div class="nav-right">
+				<a href="https://github.com/carlosvts" class="external">GitHub</a>
+				<a href="https://www.linkedin.com/in/carlos-vin%C3%ADcius-teixeira-de-souza-916a82378/" class="external">LinkedIn</a>
+				<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">
+					<svg class="icon-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+					<svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+				</button>
+			</div>
+		</nav>
+	</header>
+
+	<main class="site-main">
+		
+<section class="page page-projects">
+	<h1>Projects</h1>
+	<div class="project-grid">
+		
+		<a class="project-card" href="https://github.com/carlosvts/attention-aware-toy" target="_blank" rel="noopener noreferrer">
+			<p class="kicker">HRI</p>
+			<h2>Attention-Aware Toy</h2>
+			<p class="project-description">An experimental HRI project that uses computer vision to estimate user attention and explore how social robots can adapt their behavior based on visual engagement cues. Built with local AI models and designed as a playground for attention-aware interaction.</p>
+			<p class="project-tags">Python &middot; computer vision &middot; HRI &middot; local AI models</p>
+		</a>
+		
+		<a class="project-card" href="https://github.com/carlosvts/atelier" target="_blank" rel="noopener noreferrer">
+			<p class="kicker">ROBOTICS &amp; AI</p>
+			<h2>Atelier</h2>
+			<p class="project-description">A collection of small, isolated experiments covering computer vision, AI, robotics, distributed systems, and software engineering. Every experiment exists to deepen understanding, document the learning process, and serve as the foundation for future work.</p>
+			<p class="project-tags">Python &middot; computer vision &middot; robotics &middot; distributed systems</p>
+		</a>
+		
+		<a class="project-card" href="https://github.com/carlosvts/chip8" target="_blank" rel="noopener noreferrer">
+			<p class="kicker">SYSTEMS</p>
+			<h2>Chip-8</h2>
+			<p class="project-description">A virtual machine that implements the Chip-8 instruction set. It handles a memory map of 4KB, 16 general-purpose registers, a dedicated program counter, and a stack for subroutine calls. The emulator manages the 60Hz delay and sound timers while rendering the monochrome display buffer using SDL2.</p>
+			<p class="project-tags">C &middot; CHIP-8 &middot; emulation &middot; SDL2</p>
+		</a>
+		
+		<a class="project-card" href="https://github.com/carlosvts/raw-image-processor" target="_blank" rel="noopener noreferrer">
+			<p class="kicker">SYSTEMS</p>
+			<h2>Bitmap Parser</h2>
+			<p class="project-description">A zero-dependency parser designed to read and manipulate BMP files at the byte level. It extracts file headers and pixel arrays into raw buffers, allowing manual convolution kernels to perform image filtering operations like Gaussian blur and Sobel edge detection without external libraries.</p>
+			<p class="project-tags">C&#43;&#43; &middot; parsing &middot; image processing &middot; image filtering</p>
+		</a>
+		
+		<a class="project-card" href="https://github.com/carlosvts/malloc-implementation" target="_blank" rel="noopener noreferrer">
+			<p class="kicker">SYSTEMS</p>
+			<h2>Malloc Implementation</h2>
+			<p class="project-description">A custom dynamic memory allocator that provides implementations for malloc, calloc, realloc, and free. It interacts with the Linux kernel via the sbrk syscall and manages the heap segment using a doubly linked list structure to track allocated and free memory blocks, handling block splitting and merging.</p>
+			<p class="project-tags">C &middot; memory &middot; syscalls &middot; low-level</p>
+		</a>
+		
+		<a class="project-card" href="https://github.com/carlosvts/input-multiplexer" target="_blank" rel="noopener noreferrer">
+			<p class="kicker">SYSTEMS</p>
+			<h2>Input Multiplexer</h2>
+			<p class="project-description">A Linux utility that monitors multiple input event devices simultaneously (mouse and keyboard). It uses the epoll system call to implement an asynchronous I/O multiplexing loop, reading raw event structures from /dev/input and parsing hexadecimal data from keyboard and mouse devices in a single-threaded execution flow.</p>
+			<p class="project-tags">C&#43;&#43; &middot; Linux &middot; epoll &middot; concurrency &middot; evdev</p>
+		</a>
+		
+		<a class="project-card" href="https://github.com/carlosvts/http-server-cpp" target="_blank" rel="noopener noreferrer">
+			<p class="kicker">SYSTEMS</p>
+			<h2>HTTP Server</h2>
+			<p class="project-description">A multi-threaded HTTP/1.1 server built using the Linux socket API. It manually handles the TCP handshake, parses raw string requests into method and path components, and constructs valid HTTP response headers and body payloads. Concurrency is managed through a thread-per-connection model using POSIX threads.</p>
+			<p class="project-tags">C&#43;&#43; &middot; sockets &middot; HTTP/1.1 &middot; Linux &middot; networking</p>
+		</a>
+		
+		<a class="project-card" href="https://github.com/carlosvts/raytracing" target="_blank" rel="noopener noreferrer">
+			<p class="kicker">SYSTEMS</p>
+			<h2>Raytracer</h2>
+			<p class="project-description">A 2D raycasting engine that calculates light and shadow visibility through geometric intersections. It casts rays from a central source and computes the nearest collision point with environment segments using linear algebra, rendering the resulting visibility polygon into an SFML window buffer.</p>
+			<p class="project-tags">C&#43;&#43; &middot; graphics &middot; math &middot; SFML &middot; geometry</p>
+		</a>
+		
+		<a class="project-card" href="https://github.com/carlosvts/sandbox-game" target="_blank" rel="noopener noreferrer">
+			<p class="kicker">SYSTEMS</p>
+			<h2>Sandbox Game</h2>
+			<p class="project-description">A real-time physics simulation based on cellular automata rules. Each pixel in the grid acts as an individual element with density and state properties. The engine updates the grid every frame, calculating interactions between falling solids, flowing liquids, and expanding gases based on neighbor-state logic.</p>
+			<p class="project-tags">C&#43;&#43; &middot; engine &middot; physics &middot; simulation &middot; Raylib</p>
+		</a>
+		
+		<a class="project-card" href="https://github.com/carlosvts/GameOfLife" target="_blank" rel="noopener noreferrer">
+			<p class="kicker">SYSTEMS</p>
+			<h2>Game of Life</h2>
+			<p class="project-description">An implementation of Conway&#39;s Game of Life that simulates cellular evolution on a discrete 2D grid. The program applies the four standard transition rules to each cell state simultaneously and uses SFML to render the grid, allowing real-time interaction with the initial seed.</p>
+			<p class="project-tags">C&#43;&#43; &middot; SFML &middot; simulation &middot; cellular automata</p>
+		</a>
+		
+	</div>
+</section>
+
+	</main>
+
+	<footer class="site-footer">
+		<span>&copy; 2026 carlosvts</span>
+	</footer>
+
+	<script src="/static/js/theme.js"></script>
+</body>
+</html>

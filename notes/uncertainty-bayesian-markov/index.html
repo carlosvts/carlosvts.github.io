@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>A Study in Probability, Bayesian Networks and Markov Models — carlosvts</title>
+	<link rel="stylesheet" href="/static/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+	<script>
+		
+		(function () {
+			var stored = localStorage.getItem("theme");
+			if (stored) document.documentElement.setAttribute("data-theme", stored);
+		})();
+	</script>
+</head>
+<body>
+	<header class="site-header">
+		<nav class="nav">
+			<a class="wordmark" href="/">carlosvts</a>
+			<div class="nav-links">
+				<a href="/about/" class="">About</a>
+				<a href="/projects/" class="">Projects</a>
+				<a href="/notes/" class="active">Notes</a>
+			</div>
+			<div class="nav-right">
+				<a href="https://github.com/carlosvts" class="external">GitHub</a>
+				<a href="https://www.linkedin.com/in/carlos-vin%C3%ADcius-teixeira-de-souza-916a82378/" class="external">LinkedIn</a>
+				<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">
+					<svg class="icon-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+					<svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+				</button>
+			</div>
+		</nav>
+	</header>
+
+	<main class="site-main">
+		
+<article class="page page-note">
+	<a class="back-link" href="/notes/">&larr; Notes</a>
+	<p class="kicker">2026-01-28</p>
+	<h1>A Study in Probability, Bayesian Networks and Markov Models</h1>
+	<div class="prose">
+		<p>Now we deal with probabilities and AI's.</p>
+<h2>Probability</h2>
+<p>$$ 0 \le P(w) \le 1 $$</p>
+<p>Where <code>P(w)</code> is the probability of <code>w</code> to occur.</p>
+<p>In a way that</p>
+<p>$$ \sum_{w \in U} P(w) = 1 $$</p>
+<p>i.e., the sum of all probabilities is 1.</p>
+<p>You can translate it like</p>
+<pre><code class="language-cpp">i = 0;
+for (size_t i{}; i &lt; U.size(); i++)
+    sum += U[i];
+</code></pre>
+<p>or</p>
+<pre><code class="language-python">sum = 0
+for w in U:
+    sum += w
+</code></pre>
+<h3>Unconditional probability</h3>
+<p>Self explanatory.</p>
+<h3>Conditional probability</h3>
+<p>Assume we have</p>
+<p>$$ P(a \mid b) $$</p>
+<p>This means the probability of <code>a</code> being true
+with the evidence of <code>b</code> being true.</p>
+<blockquote>
+<p>The probability of <code>a</code> given <code>b</code></p>
+</blockquote>
+<p>e.g.
+$$ P(\text{rain today} \mid \text{rained yesterday}) $$</p>
+<p>The formula for conditional probability is:</p>
+<p>$$ P(a \mid b) = \frac{P(a \land b)}{P(b)} $$</p>
+<p>i.e., the chance of <code>a</code> happening when <code>b</code> is true is the probability of <code>a</code> $\land$ <code>b</code> divided by the probability of <code>b</code>.</p>
+<p>In this case, we can ignore worlds where <code>b</code> is false.</p>
+<h3>Probability distribution</h3>
+<p>$$ P(\text{Flight}) = \langle 0.6, 0.3, 0.1 \rangle $$</p>
+<h3>Probability independence</h3>
+<p>Independent events:</p>
+<p>$$ P(a \land b) = P(a)P(b) $$</p>
+<h3>Bayes Rule</h3>
+<p>We know that</p>
+<p>$$
+P(a \land b) = P(b) P(a \mid b)
+$$</p>
+<p>$$
+P(a \land b) = P(a) P(b \mid a)
+$$</p>
+<p>So,</p>
+<p>$$
+P(a) P(b \mid a) = P(b) P(a \mid b)
+$$</p>
+<p>Then, the Bayes Rule:</p>
+<p>$$
+P(b \mid a) = \frac{P(b)P(a \mid b)}{P(a)}
+$$</p>
+<p>Personally, I think it’s better to move the $P(a \mid b)$ to the left by dividing — it’s more clear to me.</p>
+<h3>Joint Probability</h3>
+<p>A combination of two probabilities. Think of it like the chance of raining in the PM if the AM was cloudy.</p>
+<p>We need information about the joint probability of this — analyzing independently may not work in this case.</p>
+<p><code>c</code> = cloud
+<code>r</code> = rain
+comma means $\land$</p>
+<p>$$ P(C \mid \text{rain}) = \frac{P(C, \text{rain})}{P(\text{rain})} $$</p>
+<p>We know that <code>P(rain)</code> is a constant, so we can use</p>
+<p>$$ P(C \mid \text{rain}) = \frac{P(C, \text{rain})}{\alpha} $$</p>
+<p>or</p>
+<p>$$ P(C \mid \text{rain}) = \alpha P(C, \text{rain}) $$</p>
+<p>If we know, for instance, that <code>C = 0.08</code> and <code>rain = 0.02</code></p>
+<p>We can ensure</p>
+<p>$$ P(C \mid \text{rain}) = \alpha \langle 0.08, 0.02 \rangle $$</p>
+<p>Since the sum of the probabilities needs to be 1,
+we can ensure that $ \alpha = 10 $.</p>
+<p>This is called <strong>normalizing</strong>.</p>
+<h4>Probability rules</h4>
+<h4>Negation</h4>
+<p>$$ P(\lnot a) = 1 - P(a) $$</p>
+<h4>Inclusion–exclusion</h4>
+<p>$$ P(a \lor b) = P(a) + P(b) - P(a \land b) $$</p>
+<p>Because we need to avoid counting twice the probability of both happening.</p>
+<h4>Marginalization</h4>
+<p>$$ P(a) = P(a, b) + P(a, \lnot b) $$</p>
+<p>Probability of <code>a</code> is the probability of <code>a</code> and <code>b</code> plus the probability of <code>a</code> and not <code>b</code>.</p>
+<p>This marginalization rule works for worlds with more than two variables, so we can expand it as</p>
+<p>$$ P(X = x_i) = \sum_{j} P(X = x_i, Y = y_j) $$</p>
+<p>where
+<code>j</code> = all possible values that <code>Y</code> can take.</p>
+<p>e.g.
+The probability of cloudy is the probability of:</p>
+<ul>
+<li>cloudy and raining</li>
+<li>cloudy and not raining</li>
+</ul>
+<p>$$ P(C = \text{cloud}) = P(C, R = \text{rain}) + P(C, R = \lnot \text{rain}) $$</p>
+<p>So, <strong>marginalization allows us to get specific information about a variable given a joint distribution</strong>.</p>
+<h4>Conditioning</h4>
+<p>$$ P(a) = P(a \mid b)P(b) + P(a \mid \lnot b)P(\lnot b) $$</p>
+<p>Same idea as marginalization. We can generalize it to many possible values:</p>
+<p>$$ P(X = x_i) = \sum_{j} P(X = x_i \mid Y = y_j)P(Y = y_j) $$</p>
+<p>where <code>j</code> are all values that <code>Y</code> can take.</p>
+<h3>Bayesian Networks</h3>
+<p>A data structure that represents dependencies among random variables.</p>
+<ul>
+<li>Directed graph</li>
+<li>Each node represents a random variable</li>
+<li>An arrow from X to Y means X is a parent of Y</li>
+<li>X → Y</li>
+<li>Each node has a probability distribution $P(X \mid Parents(X))$</li>
+</ul>
+<p>Example: train system</p>
+<p>Rain (none, light, heavy) → Maintenance (yes, no) → Train (on time, delayed) → Appointment (attend, miss)
+Rain → Train → Appointment</p>
+<p>Rain
+Not a conditional distribution, because it has no parents:</p>
+<p><code>none, light, heavy = {0.7, 0.2, 0.1}</code></p>
+<p>Maintenance
+The heavier the rain, the less likely maintenance becomes:</p>
+<p><code>R</code> → <code>yes</code> <code>no</code>
+<code>none</code> → <code>0.4</code>, <code>0.6</code>
+<code>light</code> → <code>0.2</code>, <code>0.8</code>
+<code>heavy</code> → <code>0.1</code>, <code>0.9</code></p>
+<p>Train
+Depends on maintenance and rain.
+It gets complex to write here, but you can imagine all possible probabilities influencing <code>on time</code> and <code>delayed</code>.</p>
+<p>Appointment
+Even more complex — although it depends on the train, the train itself depends on other things.</p>
+<p>In code, we just represent appointment based on train:</p>
+<p><code>train</code> → <code>attend</code> <code>miss</code>
+<code>on time</code> → <code>0.9</code> <code>0.1</code>
+<code>delayed</code> → <code>0.6</code> <code>0.4</code></p>
+<h3>Inference</h3>
+<p>Inferencing variables with probabilities.</p>
+<p><code>Query X:</code> variable whose probability we want to compute
+<code>Evidence E:</code> observed variables that interact with <code>X</code>
+<code>Hidden variables Y:</code> not in evidence and not in the query (like maintenance, because we didn’t observe it)</p>
+<p>Goal: Calculate $P(X \mid E)$</p>
+<p>Assuming <code>X = appointment</code> and our evidence <code>E</code> is light rain and no maintenance:</p>
+<p>$$ P(\text{appointment} \mid \text{light}, \text{no}) $$</p>
+<p>By joint probability:</p>
+<p>$$ \alpha ; P(\text{appointment}, \text{light}, \text{no}) $$</p>
+<p>By marginalization:</p>
+<p>$$ \alpha ; [P(\text{appointment}, \text{light}, \text{no}, \text{on time}) + P(\text{appointment}, \text{light}, \text{no}, \text{delayed})] $$</p>
+<h4>Inference by Enumeration</h4>
+<p>$$
+P(X \mid E) = \alpha ; P(X, E) = \alpha \sum_{y} P(X, E, y)
+$$</p>
+<p>Where <code>y</code> represents all hidden variables needed to compute the probability of <code>X</code> given <code>E</code>.</p>
+<h3>Implementing a Bayesian Network in Python</h3>
+<p>I will use an external library like <code>pomegranate</code>.
+This is a code snippet from CS50AI:</p>
+<pre><code class="language-python"># Rain node has no parents
+rain = Node(DiscreteDistribution({
+    &quot;none&quot;: 0.7,
+    &quot;light&quot;: 0.2,
+    &quot;heavy&quot;: 0.1
+}), name=&quot;rain&quot;)
+</code></pre>
+<p>When it comes to probability, performing exact calculations in Bayesian networks can be exhaustive for the CPU
+(<em>even more exhaustive in Python, lol</em>).</p>
+<h3>Markov Models</h3>
+<p>What if we want to deal with values that change over time?</p>
+<p>For complex analysis, we introduce some <strong>assumptions</strong> to approximate reality.</p>
+<h4>Markov assumption</h4>
+<blockquote>
+<p>The current state depends only on a finite fixed number of previous states</p>
+</blockquote>
+<p>Usually, we assume variables tend not to change abruptly
+(<em>assuming an assumption, lol</em>).</p>
+<h3>Hidden Markov Models (HMM)</h3>
+<p>A Markov Model with hidden states and observable events.</p>
+<h4>HMM tasks</h4>
+<p>Given an observation, a HMM can:</p>
+<ul>
+<li><strong>filtering:</strong> calculate the distribution for the current state</li>
+<li><strong>prediction:</strong> calculate the distribution for a future state</li>
+<li><strong>smoothing:</strong> calculate the distribution for a past state</li>
+<li><strong>most likely explanation:</strong> calculate the most likely sequence of states (<code>markov chain</code>)</li>
+</ul>
+
+	</div>
+</article>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+	onload="renderMathInElement(document.querySelector('.prose'), {
+		delimiters: [
+			{left: '$$', right: '$$', display: true},
+			{left: '$', right: '$', display: false}
+		]
+	});"></script>
+
+	</main>
+
+	<footer class="site-footer">
+		<span>&copy; 2026 carlosvts</span>
+	</footer>
+
+	<script src="/static/js/theme.js"></script>
+</body>
+</html>

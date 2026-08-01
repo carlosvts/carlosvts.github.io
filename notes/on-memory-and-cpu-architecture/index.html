@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>On Memory &amp; CPU Architecture — carlosvts</title>
+	<link rel="stylesheet" href="/static/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+	<script>
+		
+		(function () {
+			var stored = localStorage.getItem("theme");
+			if (stored) document.documentElement.setAttribute("data-theme", stored);
+		})();
+	</script>
+</head>
+<body>
+	<header class="site-header">
+		<nav class="nav">
+			<a class="wordmark" href="/">carlosvts</a>
+			<div class="nav-links">
+				<a href="/about/" class="">About</a>
+				<a href="/projects/" class="">Projects</a>
+				<a href="/notes/" class="active">Notes</a>
+			</div>
+			<div class="nav-right">
+				<a href="https://github.com/carlosvts" class="external">GitHub</a>
+				<a href="https://www.linkedin.com/in/carlos-vin%C3%ADcius-teixeira-de-souza-916a82378/" class="external">LinkedIn</a>
+				<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">
+					<svg class="icon-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+					<svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+				</button>
+			</div>
+		</nav>
+	</header>
+
+	<main class="site-main">
+		
+<article class="page page-note">
+	<a class="back-link" href="/notes/">&larr; Notes</a>
+	<p class="kicker">2026-01-15</p>
+	<h1>On Memory &amp; CPU Architecture</h1>
+	<div class="prose">
+		<p><img src="/static/diagrams/os-architecture.jpg" alt="Memory &amp; CPU Diagram"></p>
+<hr>
+<p>This note is an attempt to organize how I currently understand memory and CPU interactions inside a modern operating system.
+Not as an exhaustive specification, but as a mental model: where things live, who owns what, and how control flows between layers.</p>
+<p>I am intentionally mixing concrete examples (mostly in C) with conceptual explanations. Memory is not only about addresses and bytes, but about <strong>responsibility</strong>: who is allowed to touch what, and under which conditions.</p>
+<hr>
+<h2>Stack versus Heap</h2>
+<p>When a program is running, its memory is not a single flat space. Even though everything is virtual, the address space is <em>structured</em>. Two of the most discussed regions are the <strong>stack</strong> and the <strong>heap</strong>.</p>
+<p>They solve different problems and follow very different rules.</p>
+<hr>
+<h3>Stack</h3>
+<p>The stack lives in <strong>user space</strong>, inside the <strong>process virtual address space</strong>.
+It is created by the kernel when a process (or thread) starts.
+As abstraction, you can imagine as a literal stack of things (that grows down, see why some abstractions doesn't work well?)</p>
+<p>The stack is:</p>
+<ul>
+<li>automatically managed (in LIFO ordering)</li>
+<li>bounded in size</li>
+<li>grows toward <strong>lower virtual addresses</strong></li>
+<li>tightly coupled to function calls</li>
+</ul>
+<p>Local variables usually live here.</p>
+<pre><code>void foo() {
+	int x = 42;
+	char buffer[128];
+}
+</code></pre>
+<p>In this example:</p>
+<ul>
+<li><code>x</code> and <code>buffer</code> live on the <strong>stack</strong></li>
+<li>their lifetime is bound to the execution of <code>foo</code></li>
+<li>when <code>foo</code> returns, this memory is considered invalid</li>
+</ul>
+<p>The CPU participates directly in stack management through registers:</p>
+<ul>
+<li><code>RSP</code> points to the top of the stack</li>
+<li><code>RBP</code> (when used) marks the base of the current stack frame</li>
+</ul>
+<p>The stack is fast, predictable, and fragile.
+Overflowing it is not a “logic error” — it is a <strong>memory violation</strong>, and the kernel will step in.</p>
+<hr>
+<h3>Heap</h3>
+<p>The heap also lives in <strong>user space</strong>, inside the process virtual address space, but unlike the stack, it is <strong>explicitly managed</strong>.</p>
+<p>Memory on the heap is usually requested via allocators:</p>
+<p><code>int *arr = malloc(10 * sizeof(int));</code></p>
+<p>Here:</p>
+<ul>
+<li><code>arr</code> lives on the stack</li>
+<li>the memory returned by <code>malloc</code> lives on the <strong>heap</strong></li>
+<li>that's why arr is a pointer!!</li>
+</ul>
+<p>The heap:</p>
+<ul>
+<li>grows toward <strong>higher virtual addresses</strong></li>
+<li>has no automatic lifetime</li>
+<li>exists until explicitly freed (or until process termination)</li>
+</ul>
+<p><code>free(arr);</code></p>
+<p>Unlike the stack, the heap introduces <strong>temporal complexity</strong>.
+You can free memory too early, too late, or never.</p>
+<p>The kernel does not manage heap blocks directly. It provides <strong>virtual memory regions</strong>, and user-space allocators organize them.</p>
+<hr>
+<h2>MMAP</h2>
+<p><code>mmap</code> is where the abstraction becomes explicit.</p>
+<p>Instead of asking for “objects” or “arrays”, a program asks the kernel:</p>
+<blockquote>
+<p>“Map a virtual memory region for me.”</p>
+</blockquote>
+<pre><code>void *ptr = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+</code></pre>
+<p>What lives where:</p>
+<ul>
+<li>the returned pointer lives on the <strong>stack</strong></li>
+<li>the mapped memory lives in a <strong>virtual memory region</strong></li>
+<li>the mapping metadata lives in the <strong>kernel</strong></li>
+</ul>
+<p><code>mmap</code> regions can back:</p>
+<ul>
+<li>files</li>
+<li>shared memory</li>
+<li>large buffers</li>
+<li>custom allocators</li>
+</ul>
+<p>Unlike the heap, <code>mmap</code> works in <strong>pages</strong>, not bytes.</p>
+<p>A memory page is like a OS WORD</p>
+<blockquote>
+<p>Definitions
+OS WORD --&gt; lowest chunk of bits a Operating System fetches, decodes and executes (usually 32 or 64 bits)</p>
+<p>Memory page --&gt; lowest amount of RAM a kernel manages (usually 4KB)</p>
+</blockquote>
+<p>This is where virtual memory stops pretending to be continuous and starts revealing its page-based nature.</p>
+<hr>
+<h2>Kernel</h2>
+<p>The kernel does <strong>not</strong> live in user space.</p>
+<p>Each process has its own virtual address space, but the kernel is <strong>mapped into all of them</strong>, at a reserved, protected region. User code cannot access it directly.</p>
+<p>The kernel lives in <strong>kernel space</strong>, and it owns:</p>
+<ul>
+<li>page tables</li>
+<li>process descriptors</li>
+<li>file descriptors</li>
+<li>hardware drivers</li>
+<li>scheduling state</li>
+</ul>
+<hr>
+<h3>Kernel interactions with user-space programs</h3>
+<p>User programs interact with the kernel through <strong>system calls</strong>.</p>
+<p><code>write(1, &quot;hello\n&quot;, 6);</code></p>
+<p>This single line causes:</p>
+<ol>
+<li>A transition from <strong>user mode (ring 3)</strong> to <strong>kernel mode (ring 0)</strong></li>
+<li>The kernel to validate arguments</li>
+<li>The kernel to interact with a device driver</li>
+<li>A return back to user mode</li>
+</ol>
+<p>The important point:
+<strong>user programs never touch hardware or physical memory directly</strong>.
+They request services, and the kernel decides.</p>
+<hr>
+<h3>Kernel interactions with hardware</h3>
+<p>The kernel is the only software allowed to:</p>
+<ul>
+<li>configure the MMU</li>
+<li>handle interrupts</li>
+<li>manage page faults</li>
+<li>access I/O ports and memory-mapped devices</li>
+</ul>
+<p>When a page fault occurs:</p>
+<ol>
+<li>The CPU traps into the kernel</li>
+<li>The kernel inspects the faulting address</li>
+<li>The kernel decides whether:
+<ul>
+<li>to map a page</li>
+<li>to load data from disk</li>
+<li>or to kill the process</li>
+</ul>
+</li>
+</ol>
+<p>This is not an error path — it is <strong>normal execution</strong>.</p>
+<hr>
+<h2>Hardware</h2>
+<p>At the lowest visible level, everything converges into hardware.
+&quot;<strong>The Silicon</strong>&quot;</p>
+<hr>
+<h3>RAM &amp;&amp; MMU</h3>
+<p>RAM is physical memory.
+Programs never see it directly.</p>
+<p>The MMU (Memory Management Unit) sits between:</p>
+<ul>
+<li>the CPU (that generates a virtual address)</li>
+<li>and physical memory</li>
+</ul>
+<p>Every memory access follows this path:</p>
+<p><code>CPU → virtual address → MMU → physical address → RAM</code></p>
+<p>Page tables live in <strong>RAM</strong>, but are <strong>owned and managed by the kernel</strong>.</p>
+<p>A virtual address:</p>
+<ul>
+<li>may map to physical RAM</li>
+<li>may map to a file</li>
+<li>may map to nothing</li>
+</ul>
+<p>When it maps to nothing, the kernel gets involved.</p>
+<p>This is why memory is not just storage — it is policy and management.</p>
+<h2>Conclusion</h2>
+<p>Memory and CPU Architecture often are taking as two separate subjects in videos. Although its a good way to differentiate between topics, they are intricately together. To understand memory you need to understand the basics of CPU Architecture and vice-versa. After all of this reading, this note helped me organizing better my thought on memory and I hope it helps someone too.</p>
+
+	</div>
+</article>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+	onload="renderMathInElement(document.querySelector('.prose'), {
+		delimiters: [
+			{left: '$$', right: '$$', display: true},
+			{left: '$', right: '$', display: false}
+		]
+	});"></script>
+
+	</main>
+
+	<footer class="site-footer">
+		<span>&copy; 2026 carlosvts</span>
+	</footer>
+
+	<script src="/static/js/theme.js"></script>
+</body>
+</html>
